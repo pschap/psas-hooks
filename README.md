@@ -11,6 +11,37 @@ usually with the intent of either gathering information or changing the result o
 
 Using this tool, hooks can be inserted into individual functions within the game that can be used print additional debugging information, dump memory, or alter the behavior or memory state of the game allowing for custom mods. This tool takes advantage of the taihen function hooking framework to insert hooks at specific addresses within the game's code.
 
+## Usage
+To be able to capture and view debugging messages printed to stdout, first install PrincessLog from the [PS Vita RE-Tools Repository](https://github.com/TeamFAPS/PSVita-RE-tools).
+There are three files:
+
+1. ```NetDbgLogPc.exe```
+2. ```NetLoggingMgrSettings.vpk```
+3. ```net_logging_mgr.skprx```.
+
+Transfer ```NetLoggingMgrSettings.vpk to your Vita and install it.``` This will allow you to configure PrincessLog to redirect stdout to a specific IP and port. The implementation of PrincessLog in this repository seems to have a horrible bug in it where a null byte is not read into the configuration file header, resulting in the configuration file not being loaded/PrincessLog failing to start. If you experience difficulty with PrincessLog, you unfortunately will probably have to open the configuration file in hex editor and manually write this null byte. The configuration file should be located on your Vita in ```ur0:data/NetLoggingMgrConfig.bin```. The first 4 bytes of the configuration file should be the following:
+
+```
+00000000: 4e4c 4d00      NLM.
+```
+
+Next, add ```net_logging_mgr.skprx``` to your ```ur0:tai/config.txt```.
+
+```
+*KERNEL
+ur0:tai/net_logging_mgr.skprx
+```
+
+Lastly, if on Windows, run ```NetDbgLogPc.exe``` from the command prompt. The port you specified earlier in the PrincessLog configuration file can be specified here as a command-line argument. If on Linux, use the netcat command ```nc -kl <port>```. Add the compiled hooking module (```psas-hooks.suprx```) to your taihen configuration file.
+You must add a new section to this file with the ID for PlayStation All-Stars. For example, for the American version of the game, add the following:
+
+```
+*PCSA00069
+ur0:tai/psas-hooks.suprx
+```
+
+If done correctly, you should see all stdout output from your Vita being printed to your terminal as in the demo video above.
+
 ## Building
 First install [CMake](https://cmake.org/download/) and then run the following commands from this repository.
 
