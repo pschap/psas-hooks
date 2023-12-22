@@ -72,7 +72,7 @@ the offset in the game's executable to insert the hook and the hook detour. For 
 which reads from a file, add the following:
 
 ```c
-Hook hooks[NUM_HOOKS] = 
+static Hook hooks[] = 
 {
     ...
     {0x86b38, detour_ReadFile, 0, 0},
@@ -82,7 +82,7 @@ Hook hooks[NUM_HOOKS] =
 
 Entries in this table can simply be commented out to disable individual hooks.
 
-In ```detours.c```, provide definitions for the detour functions previously defined in ```hooks.h```:
+In ```detours.c```, provide definitions for the detour functions previously defined in ```hooks.h``` Each detour function must call ```resolve_hook_at_offset``` with the offset given in the hooks table earlier. See the below example:
 
 ```c
 int detour_ReadFile(unsigned int r0, unsigned int r1, unsigned int r2, unsigned int r3)
