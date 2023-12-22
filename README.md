@@ -57,7 +57,7 @@ To add additional hooks, three files must be modified:
 2. ```src/detours.c```
 3. ```src/hooks.c```
 
-In ```hooks.h```, change the definition of ```NUM_HOOKS``` to reflect the total number of hooks present. Then, add definitions for the "detour" to execute when the hook is triggered/instructions are executed at a given offset. Each detour function must return an int and the arguments passed to this function will be the contents of ARM registers r0-r3. For hooks that occur at the beginning of a function, r0-r3 will hold the function arguments.
+In ```hooks.h```, add a definition for the "detour" to execute when the hook is triggered/instructions are executed at a given offset. Each detour function must return an int and the arguments passed to this function will be the contents of ARM registers r0-r3. For hooks that occur at the beginning of a function, r0-r3 will hold the function arguments.
 
 ```c
 #define NUM_HOOKS 2
@@ -80,22 +80,22 @@ Hook hooks[NUM_HOOKS] =
 };
 ```
 
+Entries in this table can simply be commented out to disable individual hooks.
+
 In ```detours.c```, provide definitions for the detour functions previously defined in ```hooks.h```:
 
 ```c
 int detour_ReadFile(unsigned int r0, unsigned int r1, unsigned int r2, unsigned int r3)
 {
-    int ret;
-    tai_hook_ref_t ref;
+    Hook *hook;
 
+    hook = resolve_hook_at_offset(0x86b38);
     printf("[hook] ReadFile     char *file: %x, int *fileSize: %x\n", r0, r1);
 
+    printf("\tReturn Address: %p\n", __builtin_return_address(0));
     if (r0)
         printf("\tReading file: %s\n", (char *)r0);
 
-    ref = resolve_hook_ref(0x86b38);
-    ret = TAI_CONTINUE(int, ref, r0, r1, r2, r3);
-
-    return ret;
+    return TAI_CONTINUE(int, hook->ref, r0, r1, r2, r3);
 }
 ```
