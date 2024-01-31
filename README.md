@@ -11,6 +11,14 @@ usually with the intent of either gathering information or changing the result o
 
 Using this tool, hooks can be inserted into individual functions within the game that can be used print additional debugging information, dump memory, or alter the behavior or memory state of the game allowing for custom mods. This tool takes advantage of the taihen function hooking framework to insert hooks at specific addresses within the game's code.
 
+## Building
+First install [CMake](https://cmake.org/download/) and then run the following commands from this repository.
+
+1. ```mkdir build```
+2. ```cd build```
+3. ```cmake ..```
+4. ```make all```
+
 ## Usage
 To be able to capture and view debugging messages printed to stdout, first install PrincessLog from the [PS Vita RE-Tools Repository](https://github.com/TeamFAPS/PSVita-RE-tools).
 There are three files:
@@ -40,15 +48,7 @@ You must add a new section to this file with the ID for PlayStation All-Stars. F
 ur0:tai/psas-hooks.suprx
 ```
 
-If done correctly, you should see all stdout output from your Vita being printed to your terminal as in the demo video above.
-
-## Building
-First install [CMake](https://cmake.org/download/) and then run the following commands from this repository.
-
-1. ```mkdir build```
-2. ```cd build```
-3. ```cmake ..```
-4. ```make all```
+If you have [vitacompanion](https://github.com/devnoname120/vitacompanion), you can use ```vitacompanion.sh``` to transfer ```psas-hooks.suprx``` onto your Vita and launch the game.Just replace ```IP_TO_VITA``` with your Vita's IP address. If done correctly, you should see all stdout output from your Vita being printed to your terminal as in the demo video above.
 
 ## Contributing/Adding Hooks
 To add additional hooks, three files must be modified:
@@ -60,8 +60,6 @@ To add additional hooks, three files must be modified:
 In ```hooks.h```, add a definition for the "detour" to execute when the hook is triggered/instructions are executed at a given offset. Each detour function must return an int and the arguments passed to this function will be the contents of ARM registers r0-r3. For hooks that occur at the beginning of a function, r0-r3 will hold the function arguments.
 
 ```c
-#define NUM_HOOKS 2
-...
 // Detours
 int detour_ReadFile(unsigned int r0, unsigned int r1, unsigned int r2, unsigned int r3);
 int detour_MountPsarc(unsigned int r0, unsigned int r1, unsigned int r3, unsigned int r3);
