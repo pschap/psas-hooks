@@ -23,10 +23,13 @@
  */ 
 static Hook hooks[] = 
 {
-    {0x86b38, detour_ReadFile, 0, 0},
-    {0x8748a, detour_MountPsarc, 0, 0},
-    {0xd8da4, detour_FUN_810d8da4, 0, 0},
-    {0xcfa86, detour_FUN_810cfa86, 0, 0}
+//    {0x86b38, detour_ReadFile, 0, 0},
+//    {0x8748a, detour_MountPsarc, 0, 0},
+//    {0xcfa86, detour_IncrementAp, 0, 0},
+//    {0x317a8, detour_HashBcsvAttribute, 0, 0},
+//    {0x31ce0, detour_FUN_81031ce0, 0, 0},
+//    {0x86622, detour_LoadingThreadEntry, 0, 0},
+//    {0x85f46, detour_LoadAsset, 0, 0}
 };
 
 static HookNode **table = NULL;
@@ -151,7 +154,7 @@ void insert_hooks(tai_module_info_t *tai_info)
         hook = &hooks[i];
         hook->uid = taiHookFunctionOffset(&hook->ref, tai_info->modid, 0, hook->offset, 1, hook->detour);
         if (DEBUG)
-            printf("hook_uid[%i]: %x\n", i, hook->uid);
+            printf("hook_uid[%i]: %x @ 0x%x\n", i, hook->uid, 0x81000000 + hook->offset);
     }
 }
 
