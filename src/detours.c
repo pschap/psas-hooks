@@ -94,11 +94,11 @@ int detour_LoadingThreadEntry(unsigned int r0, unsigned int r1, unsigned int r2,
 
     printf("\t Return Address: %p\n", __builtin_return_address(0));
     if (r0)
-        hex_dump("param_1", (void *)r0, 32, 16);
+        hex_dump("param_1", (void *)r0, 1024, 16);
     
     load_assets = *(void **)(r0 + 0x10);
     if (load_assets)
-        hex_dump("load_assets", load_assets, 128, 16);
+        hex_dump("load_assets", load_assets, 1024, 16);
 
     return TAI_CONTINUE(int, hook->ref, r0, r1, r2, r3);
 }

@@ -28,8 +28,8 @@ static Hook hooks[] =
 //    {0xcfa86, detour_IncrementAp, 0, 0},
 //    {0x317a8, detour_HashBcsvAttribute, 0, 0},
 //    {0x31ce0, detour_FUN_81031ce0, 0, 0},
-//    {0x86622, detour_LoadingThreadEntry, 0, 0},
-//    {0x85f46, detour_LoadAsset, 0, 0}
+    {0x86622, detour_LoadingThreadEntry, 0, 0},
+    {0x85f46, detour_LoadAsset, 0, 0}
 };
 
 static HookNode **table = NULL;
